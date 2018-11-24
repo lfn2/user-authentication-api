@@ -4,8 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
-public class InvalidUserCredentialsException extends UnauthorizedException {
-  public InvalidUserCredentialsException() {
-    super("Invalid email or password");
+public class UnauthorizedException extends RuntimeException {
+  public UnauthorizedException() {
+    super("Unauthorized");
+  }
+
+  public UnauthorizedException(String message) {
+    super(message);
   }
 }

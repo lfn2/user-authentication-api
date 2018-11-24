@@ -25,4 +25,8 @@ public class TokenService {
         .signWith(this.signingKey)
         .compact();
   }
+
+  public void validateToken(String encodedToken) {
+    Jwts.parser().setSigningKey(signingKey).parseClaimsJws(encodedToken);
+  }
 }

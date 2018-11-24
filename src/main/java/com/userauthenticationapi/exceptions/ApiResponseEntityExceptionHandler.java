@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,8 +38,8 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   }
 
   @ExceptionHandler
-  public final ResponseEntity<Object> handleInvalidUserCredentialsException(
-      InvalidUserCredentialsException e, WebRequest webRequest) {
+  public final ResponseEntity<Object> handleUnauthorizedException(
+      UnauthorizedException e, WebRequest webRequest) {
     ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
 
     return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);

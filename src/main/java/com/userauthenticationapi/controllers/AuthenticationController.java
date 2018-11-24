@@ -1,5 +1,6 @@
 package com.userauthenticationapi.controllers;
 
+import com.userauthenticationapi.exceptions.UnauthorizedException;
 import com.userauthenticationapi.forms.SignUpForm;
 import com.userauthenticationapi.forms.LoginForm;
 import com.userauthenticationapi.models.User;
@@ -18,9 +19,14 @@ public class AuthenticationController {
   private UserService userService;
 
   @GetMapping("/user/{id}")
-  public User findUser(@PathVariable UUID id) {
-    User user = userService.findByUserId(id);
-    return user;
+  public User getUser(@PathVariable UUID id, @RequestHeader(value = "Authorization", required = false) String token) {
+    if (token == null || token.isEmpty()) {
+      throw new UnauthorizedException();
+    } else if (token.startsWith("Bearer")) {
+      token = token.replace("Bearer ", "");
+    }
+
+    return userService.get(id, token);
   }
 
   @PostMapping("/sign_up")
