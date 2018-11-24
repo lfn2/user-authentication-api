@@ -10,19 +10,29 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class UserService {
+  private static final long USER_TOKEN_EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(30);
+
   @Autowired
   private UserRepository userRepository;
 
-  public User findUser(UUID id) {
-    Optional<User> user = userRepository.findById(id);
+  @Autowired
+  private TokenService tokenService;
+
+  public UserService() {}
+
+  public User findByUserId(UUID userId) {
+    Optional<User> user = userRepository.findByUserId(userId);
 
     if (!user.isPresent()) {
-      throw new UserNotFoundException(id);
+      throw new UserNotFoundException(userId);
     }
 
     return user.get();
@@ -36,6 +46,8 @@ public class UserService {
     }
 
     user.getPhones().forEach(phone -> phone.setUser(user));
+    user.setUserId(UUID.randomUUID());
+    user.setToken(tokenService.createToken(user.getUserId().toString(), USER_TOKEN_EXPIRATION_TIME));
 
     return userRepository.save(user);
   }

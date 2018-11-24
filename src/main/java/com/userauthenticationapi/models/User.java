@@ -1,5 +1,6 @@
 package com.userauthenticationapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.userauthenticationapi.forms.CreateUserForm;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,23 +11,32 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(indexes = {@Index(name="email_index", columnList = "email",unique = true)})
 public class User {
   @Id
   @GeneratedValue
-  private UUID id;
+  @JsonIgnore
+  private Long id;
+
+  private UUID userId;
 
   private String name;
 
-  @Column(unique = true)
   private String email;
 
   private String password;
 
   @CreationTimestamp
-  private Date modified;
+  private Date created;
 
   @UpdateTimestamp
-  private Date updated;
+  private Date modified;
+
+  @CreationTimestamp
+  private Date lastLogin;
+
+  @Transient
+  private String token;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<PhoneNumber> phones;
@@ -40,11 +50,11 @@ public class User {
     this.phones = createUserForm.getPhones();
   }
 
-  public UUID getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -72,6 +82,14 @@ public class User {
     this.password = password;
   }
 
+  public Date getCreated() {
+    return created;
+  }
+
+  public void setCreated(Date created) {
+    this.created = created;
+  }
+
   public Date getModified() {
     return modified;
   }
@@ -80,19 +98,35 @@ public class User {
     this.modified = modified;
   }
 
-  public Date getUpdated() {
-    return updated;
-  }
-
-  public void setUpdated(Date updated) {
-    this.updated = updated;
-  }
-
   public List<PhoneNumber> getPhones() {
     return phones;
   }
 
   public void setPhones(List<PhoneNumber> phones) {
     this.phones = phones;
+  }
+
+  public Date getLastLogin() {
+    return lastLogin;
+  }
+
+  public void setLastLogin(Date lastLogin) {
+    this.lastLogin = lastLogin;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
+  }
+
+  public UUID getUserId() {
+    return userId;
+  }
+
+  public void setUserId(UUID userId) {
+    this.userId = userId;
   }
 }

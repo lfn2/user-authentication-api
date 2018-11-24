@@ -19,7 +19,7 @@ public class UserController {
 
   @GetMapping("/user/{id}")
   public User findUser(@PathVariable UUID id) {
-    return userService.findUser(id);
+    return userService.findByUserId(id);
   }
 
   @PostMapping("/user")
