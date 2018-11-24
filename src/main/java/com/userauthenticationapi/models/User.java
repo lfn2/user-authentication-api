@@ -1,7 +1,7 @@
 package com.userauthenticationapi.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.userauthenticationapi.forms.CreateUserForm;
+import com.userauthenticationapi.forms.SignUpForm;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -42,7 +42,7 @@ public class User {
 
   public User() { }
 
-  public User(CreateUserForm createUserForm) {
+  public User(SignUpForm createUserForm) {
     this.name = createUserForm.getName();
     this.email = createUserForm.getEmail();
     this.password = createUserForm.getPassword();

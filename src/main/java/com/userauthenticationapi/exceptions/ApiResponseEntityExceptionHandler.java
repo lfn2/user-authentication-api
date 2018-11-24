@@ -36,6 +36,14 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
     return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler
+  public final ResponseEntity<Object> handleInvalidUserCredentialsException(
+      InvalidUserCredentialsException e, WebRequest webRequest) {
+    ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
+
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
+  }
+
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request

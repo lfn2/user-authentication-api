@@ -1,6 +1,7 @@
 package com.userauthenticationapi.controllers;
 
-import com.userauthenticationapi.forms.CreateUserForm;
+import com.userauthenticationapi.forms.SignUpForm;
+import com.userauthenticationapi.forms.LoginForm;
 import com.userauthenticationapi.models.User;
 import com.userauthenticationapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,16 @@ public class AuthenticationController {
   }
 
   @PostMapping("/sign_up")
-  public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserForm createUserForm) {
-    User user = userService.save(new User(createUserForm));
+  public ResponseEntity<User> signUp(@Valid @RequestBody SignUpForm signUpForm) {
+    User user = userService.save(new User(signUpForm));
 
     return new ResponseEntity<>(user, HttpStatus.CREATED);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<User> login(@Valid @RequestBody LoginForm loginForm) {
+    User user = userService.authenticate(loginForm.getEmail(), loginForm.getPassword());
+
+    return new ResponseEntity<>(user, HttpStatus.OK);
   }
 }

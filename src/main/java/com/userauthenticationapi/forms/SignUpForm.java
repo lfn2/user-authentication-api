@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
-public class CreateUserForm {
+public class SignUpForm {
   @NotBlank
   private String name;
 
