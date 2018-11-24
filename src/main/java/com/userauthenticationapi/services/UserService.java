@@ -35,6 +35,8 @@ public class UserService {
       throw new UserEmailAlreadyRegisteredException();
     }
 
+    user.getPhones().forEach(phone -> phone.setUser(user));
+
     return userRepository.save(user);
   }
 

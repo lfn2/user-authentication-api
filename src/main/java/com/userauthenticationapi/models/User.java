@@ -6,6 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,12 +28,16 @@ public class User {
   @UpdateTimestamp
   private Date updated;
 
+  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<PhoneNumber> phones;
+
   public User() { }
 
   public User(CreateUserForm createUserForm) {
     this.name = createUserForm.getName();
     this.email = createUserForm.getEmail();
     this.password = createUserForm.getPassword();
+    this.phones = createUserForm.getPhones();
   }
 
   public UUID getId() {
@@ -81,5 +86,13 @@ public class User {
 
   public void setUpdated(Date updated) {
     this.updated = updated;
+  }
+
+  public List<PhoneNumber> getPhones() {
+    return phones;
+  }
+
+  public void setPhones(List<PhoneNumber> phones) {
+    this.phones = phones;
   }
 }
