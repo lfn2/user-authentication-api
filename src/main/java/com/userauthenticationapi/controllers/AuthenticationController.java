@@ -18,15 +18,9 @@ public class AuthenticationController {
   @Autowired
   private UserService userService;
 
-  @GetMapping("/user/{id}")
-  public User getUser(@PathVariable UUID id, @RequestHeader(value = "Authorization", required = false) String token) {
-    if (token == null || token.isEmpty()) {
-      throw new UnauthorizedException();
-    } else if (token.startsWith("Bearer")) {
-      token = token.replace("Bearer ", "");
-    }
-
-    return userService.get(id, token);
+  @GetMapping("/")
+  public String index() {
+    return "User Authentication Api!";
   }
 
   @PostMapping("/sign_up")
@@ -41,5 +35,16 @@ public class AuthenticationController {
     User user = userService.authenticate(loginForm.getEmail(), loginForm.getPassword());
 
     return new ResponseEntity<>(user, HttpStatus.OK);
+  }
+
+  @GetMapping("/user/{id}")
+  public User getUser(@PathVariable UUID id, @RequestHeader(value = "Authorization", required = false) String token) {
+    if (token == null || token.isEmpty()) {
+      throw new UnauthorizedException();
+    } else if (token.startsWith("Bearer")) {
+      token = token.replace("Bearer ", "");
+    }
+
+    return userService.get(id, token);
   }
 }
