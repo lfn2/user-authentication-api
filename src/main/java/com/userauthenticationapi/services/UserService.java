@@ -5,13 +5,11 @@ import com.userauthenticationapi.exceptions.UserNotFoundException;
 import com.userauthenticationapi.forms.CreateUserForm;
 import com.userauthenticationapi.models.User;
 import com.userauthenticationapi.repositories.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -38,15 +36,14 @@ public class UserService {
     return user.get();
   }
 
-  public User createUser(CreateUserForm createUserForm) {
-    User user = new User(createUserForm);
-
+  public User save(User user) {
     if (isEmailRegistered(user)) {
       throw new UserEmailAlreadyRegisteredException();
     }
 
     user.getPhones().forEach(phone -> phone.setUser(user));
     user.setUserId(UUID.randomUUID());
+    user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
     user.setToken(tokenService.createToken(user.getUserId().toString(), USER_TOKEN_EXPIRATION_TIME));
 
     return userRepository.save(user);

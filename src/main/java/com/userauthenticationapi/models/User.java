@@ -35,7 +35,6 @@ public class User {
   @CreationTimestamp
   private Date lastLogin;
 
-  @Transient
   private String token;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

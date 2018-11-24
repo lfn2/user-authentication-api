@@ -12,19 +12,19 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-public class UserController {
-
+public class AuthenticationController {
   @Autowired
   private UserService userService;
 
   @GetMapping("/user/{id}")
   public User findUser(@PathVariable UUID id) {
-    return userService.findByUserId(id);
+    User user = userService.findByUserId(id);
+    return user;
   }
 
-  @PostMapping("/user")
+  @PostMapping("/sign_up")
   public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserForm createUserForm) {
-    User user = userService.createUser(createUserForm);
+    User user = userService.save(new User(createUserForm));
 
     return new ResponseEntity<>(user, HttpStatus.CREATED);
   }
