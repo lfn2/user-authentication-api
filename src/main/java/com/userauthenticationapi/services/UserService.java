@@ -35,18 +35,6 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  private void validateToken(User user, String token) {
-    if (!user.getToken().equals(token)) {
-      throw new UnauthorizedException();
-    }
-
-    try {
-      tokenService.validateToken(token);
-    } catch (ExpiredJwtException e) {
-      throw new InvalidSessionException();
-    }
-  }
-
   public User save(User user) {
     if (findByEmail(user.getEmail()).isPresent()) {
       throw new UserEmailAlreadyRegisteredException();
@@ -99,5 +87,17 @@ public class UserService {
 
   private String generateToken(User user) {
     return tokenService.createToken(user.getUserId().toString(), USER_TOKEN_EXPIRATION_TIME);
+  }
+
+  private void validateToken(User user, String token) {
+    if (!user.getToken().equals(token)) {
+      throw new UnauthorizedException();
+    }
+
+    try {
+      tokenService.validateToken(token);
+    } catch (ExpiredJwtException e) {
+      throw new InvalidSessionException();
+    }
   }
 }
